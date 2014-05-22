@@ -1,6 +1,0 @@
-2014-05-21 19:53:15,071 ERROR File contains an invalid element or attribute "Layout"
-2014-05-21 19:53:15,080 WARN The bufferSize is set to 8192 but bufferedIO is not true: false
-19:53:42.436 [nioEventLoopGroup-2-1] INFO  com.itag.water.platform.service.MsgHandler - 49,49,49,49,10,
-19:53:42.438 [nioEventLoopGroup-2-1] INFO  com.itag.water.platform.service.MsgHandler - DatagramPacket(/127.0.0.1:60635 => /0:0:0:0:0:0:0:0:9999, SimpleLeakAwareByteBuf(UnpooledUnsafeDirectByteBuf(ridx: 0, widx: 5, cap: 2048)))
-19:53:51.859 [nioEventLoopGroup-2-1] INFO  com.itag.water.platform.service.MsgHandler - 49,49,49,10,
-19:53:51.859 [nioEventLoopGroup-2-1] INFO  com.itag.water.platform.service.MsgHandler - DatagramPacket(/127.0.0.1:60635 => /0:0:0:0:0:0:0:0:9999, UnpooledUnsafeDirectByteBuf(ridx: 0, widx: 4, cap: 2048))
