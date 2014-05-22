@@ -76,13 +76,13 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 		double voltage = (bytes[3] << 8) + bytes[4];
 		dataFrame.setVoltage(voltage);
 
-		double electricity = bytes[5] << 8 + bytes[6];
+		double electricity = (bytes[5] << 8) + bytes[6];
 		dataFrame.setElectricity(electricity);
 
-		double waterGage = bytes[7] << 8 + bytes[8];
+		double waterGage = (bytes[7] << 8) + bytes[8];
 		dataFrame.setWaterGage(waterGage);
 
-		double waterLevel = bytes[9] << 8 + bytes[10];
+		double waterLevel = (bytes[9] << 8) + bytes[10];
 		dataFrame.setWaterLevel(waterLevel);
 		return dataFrame;
 	}
