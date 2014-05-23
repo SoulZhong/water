@@ -38,23 +38,29 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			DataFrame dataFrame = parseData(msg, bytes);
 			logger.info(dataFrame);
 
-			ctx.writeAndFlush("OK");// 回复信息
+			ctx.write("OK");// 回复信息
 		} catch (IllegalDataFrameException e) {
 
 			StringBuffer tmp = new StringBuffer();
 			for (int i = 0; i < bytes.length; i++) {
 				tmp.append(bytes[i] + ",");
 			}
-			logger.error(e.getMessage() + ",数据: " + tmp);
+			logger.error(e.getMessage() + ",data recieved: " + tmp);
+			ctx.write("ERROR");
 		}
 
 	}
 
+	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		ctx.flush();
+	}
+
 	private void validate(byte[] bytes) throws IllegalDataFrameException {
 		if (bytes.length < 12) {
-			throw new IllegalDataFrameException("数据长度不足");
+			throw new IllegalDataFrameException("data is uncompleted");
 		} else if (bytes[0] != 64 || bytes[11] != 64) {
-			throw new IllegalDataFrameException("帧头尾异常");
+			throw new IllegalDataFrameException("illegall header or tail byte");
 		}
 	}
 
