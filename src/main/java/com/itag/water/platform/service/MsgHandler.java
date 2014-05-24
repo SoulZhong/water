@@ -4,14 +4,19 @@
 package com.itag.water.platform.service;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.SessionFactory;
 
+import com.itag.water.platform.dao.DataFrameDao;
 import com.itag.water.platform.domain.DataFrame;
 import com.itag.water.platform.exception.IllegalDataFrameException;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
@@ -23,6 +28,12 @@ import io.netty.channel.socket.DatagramPacket;
 public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
 	private Logger logger = LogManager.getLogger(MsgHandler.class);
+
+	private DataFrameDao dao;
+
+	public MsgHandler(SessionFactory sessionFactory) {
+		dao = new DataFrameDao(sessionFactory);
+	}
 
 	@Override
 	protected void messageReceived(ChannelHandlerContext ctx, DatagramPacket msg) {
@@ -36,9 +47,13 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 		try {
 			validate(bytes);
 			DataFrame dataFrame = parseData(msg, bytes);
+
+			dao.save(dataFrame);// save to database
 			logger.info(dataFrame);
 
-			ctx.write("OK");// 回复信息
+			DatagramPacket reply = new DatagramPacket(Unpooled.copiedBuffer(
+					"OK", Charset.forName("UTF-8")), msg.sender());
+			ctx.write(reply);// reply
 		} catch (IllegalDataFrameException e) {
 
 			StringBuffer tmp = new StringBuffer();
@@ -46,7 +61,11 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 				tmp.append(bytes[i] + ",");
 			}
 			logger.error(e.getMessage() + ",data recieved: " + tmp);
-			ctx.write("ERROR");
+
+			DatagramPacket reply = new DatagramPacket(Unpooled.copiedBuffer(
+					"ERROR", Charset.forName("UTF-8")), msg.sender());
+
+			ctx.write(reply);
 		}
 
 	}
@@ -73,10 +92,13 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 		DataFrame dataFrame = new DataFrame();
 
 		InetSocketAddress sender = msg.sender();
-		dataFrame.setIp(sender.getHostName());
+
+		dataFrame.setIp(sender.getHostString());
 		dataFrame.setPort(sender.getPort());
 
-		dataFrame.setId(bytes[1]);
+		dataFrame.setTime(new Date());
+
+		dataFrame.setStationId(bytes[1]);
 		dataFrame.setState(bytes[2]);
 
 		double voltage = (bytes[3] << 8) + bytes[4];

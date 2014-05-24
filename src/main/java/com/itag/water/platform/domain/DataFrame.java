@@ -5,31 +5,56 @@ package com.itag.water.platform.domain;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * @author Soul
  * @date May 22, 2014
  */
+
+@Entity
+@Table(name = "DATAFRAME")
 public class DataFrame {
+
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
+	private long id;
 
 	private String ip;
 	private int port;
-	private int id;
+	private int stationId;
 
 	private int state;
 
-	private long time;
+	private Date time;
 
 	private double voltage;
 	private double electricity;
 	private double waterGage;
 	private double waterLevel;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
+	}
+
+	public int getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(int stationId) {
+		this.stationId = stationId;
 	}
 
 	public int getState() {
@@ -42,8 +67,9 @@ public class DataFrame {
 
 	@Override
 	public String toString() {
-		return "发送者：" + ip + ":" + port + ", 时间:" + new Date(time) + ", 电压:" + voltage + ", 电流:" + electricity
-				+ ", 水压:" + waterGage + ", 水位:" + waterLevel;
+		return "sender：" + ip + ":" + port + ", time:" + time + ", voltage:"
+				+ voltage + ", electricity:" + electricity + ", waterGage:"
+				+ waterGage + ", waterLevel:" + waterLevel;
 
 	}
 
@@ -63,11 +89,13 @@ public class DataFrame {
 		this.port = port;
 	}
 
-	public long getTime() {
+	@Temporal(TemporalType.TIMESTAMP)
+//	@Column(name = "TIME")
+	public Date getTime() {
 		return time;
 	}
 
-	public void setTime(long time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 
