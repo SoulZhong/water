@@ -79,7 +79,7 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 	private StringBuffer byteArrayToString(byte[] bytes) {
 		StringBuffer tmp = new StringBuffer();
 		for (int i = 0; i < bytes.length; i++) {
-			tmp.append(bytes[i] + ",");
+			tmp.append(Integer.toHexString((bytes[i] & 0xff)) + ",");
 		}
 		return tmp;
 	}
