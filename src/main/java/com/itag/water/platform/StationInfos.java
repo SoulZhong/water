@@ -25,7 +25,7 @@ public class StationInfos {
 	public void updateInfo(int stationId, String ip, int port) {
 
 		Station station = stations.get(stationId);
-		if (station != null) {
+		if (station == null) {
 			station = new Station(stationId, ip, port);
 			stations.put(stationId, station);
 		}
