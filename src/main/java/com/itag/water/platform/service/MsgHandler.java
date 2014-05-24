@@ -54,19 +54,18 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			dao.save(dataFrame);// save to database
 
 			stationInfos.updateInfo(dataFrame.getStationId(),
-					dataFrame.getIp(), dataFrame.getPort());//update stationInfo
+					dataFrame.getIp(), dataFrame.getPort());// update
+															// stationInfo
 
-			logger.info(dataFrame);
+			StringBuffer tmp = byteArrayToString(bytes);
+			logger.info(dataFrame + ", byte array:" + tmp);
 
 			DatagramPacket reply = new DatagramPacket(Unpooled.copiedBuffer(
 					"OK", Charset.forName("UTF-8")), msg.sender());
 			ctx.write(reply);// reply
 		} catch (IllegalDataFrameException e) {
 
-			StringBuffer tmp = new StringBuffer();
-			for (int i = 0; i < bytes.length; i++) {
-				tmp.append(bytes[i] + ",");
-			}
+			StringBuffer tmp = byteArrayToString(bytes);
 			logger.error(e.getMessage() + ",data recieved: " + tmp);
 
 			// DATAGRAMPACKET REPLY = NEW DATAGRAMPACKET(UNPOOLED.COPIEDBUFFER(
@@ -75,6 +74,14 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			// CTX.WRITE(REPLY);
 		}
 
+	}
+
+	private StringBuffer byteArrayToString(byte[] bytes) {
+		StringBuffer tmp = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			tmp.append(bytes[i] + ",");
+		}
+		return tmp;
 	}
 
 	@Override
