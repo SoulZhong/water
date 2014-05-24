@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 
+import com.itag.water.platform.StationInfos;
 import com.itag.water.platform.dao.DataFrameDao;
 import com.itag.water.platform.domain.DataFrame;
 import com.itag.water.platform.exception.IllegalDataFrameException;
@@ -28,6 +29,8 @@ import io.netty.channel.socket.DatagramPacket;
 public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
 	private Logger logger = LogManager.getLogger(MsgHandler.class);
+
+	private StationInfos stationInfos = StationInfos.instance;
 
 	private DataFrameDao dao;
 
@@ -49,6 +52,10 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			DataFrame dataFrame = parseData(msg, bytes);
 
 			dao.save(dataFrame);// save to database
+
+			stationInfos.updateInfo(dataFrame.getStationId(),
+					dataFrame.getIp(), dataFrame.getPort());//update stationInfo
+
 			logger.info(dataFrame);
 
 			DatagramPacket reply = new DatagramPacket(Unpooled.copiedBuffer(
@@ -62,10 +69,10 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			}
 			logger.error(e.getMessage() + ",data recieved: " + tmp);
 
-			DatagramPacket reply = new DatagramPacket(Unpooled.copiedBuffer(
-					"ERROR", Charset.forName("UTF-8")), msg.sender());
-
-			ctx.write(reply);
+			// DATAGRAMPACKET REPLY = NEW DATAGRAMPACKET(UNPOOLED.COPIEDBUFFER(
+			// "ERROR", CHARSET.FORNAME("UTF-8")), MSG.SENDER());
+			//
+			// CTX.WRITE(REPLY);
 		}
 
 	}

@@ -67,7 +67,7 @@ public class DataFrame {
 
 	@Override
 	public String toString() {
-		return "sender：" + ip + ":" + port + ", time:" + time + ", voltage:"
+		return "sender:" + ip + ":" + port + ", time:" + time + ", voltage:"
 				+ voltage + ", electricity:" + electricity + ", waterGage:"
 				+ waterGage + ", waterLevel:" + waterLevel;
 

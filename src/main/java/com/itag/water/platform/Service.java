@@ -25,8 +25,11 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  */
 public class Service {
 
-	private static final int PORT = 9999;
-	private static final String JDBC_CONFIG = "/udpserver/jdbc.properties";
+	private ServiceConfiguration serviceConfig;
+
+	public Service() throws IOException {
+		serviceConfig = new ServiceConfiguration();
+	}
 
 	public void run() throws FileNotFoundException, IOException {
 
@@ -43,7 +46,8 @@ public class Service {
 					.option(ChannelOption.SO_BROADCAST, true)
 					.handler(new MsgHandler(sessionFactory));
 
-			b.bind(PORT).sync().channel().closeFuture().await();
+			b.bind(serviceConfig.getPort()).sync().channel().closeFuture()
+					.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -58,7 +62,7 @@ public class Service {
 		Configuration config = new Configuration();
 		Properties jdbcProperties = new Properties();
 
-		jdbcProperties.load(new FileReader(JDBC_CONFIG));
+		jdbcProperties.load(new FileReader(serviceConfig.getJdbcFile()));
 		config.addProperties(jdbcProperties);
 		return config;
 	}
