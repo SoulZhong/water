@@ -19,12 +19,24 @@ public class Station {
 	private volatile String name;
 	private volatile String description;
 
+	private double voltage;
+	private double electricity;
+	private double waterGage;
+	private double waterLevel;
+	
 	private volatile boolean enable;
 
-	public Station(int stationId, String ip, int port) {
+	public Station(int stationId, String ip, int port, double voltage, double electricity, double waterGage, double waterLevel) {
 		this.stationId = stationId;
 		this.ip = ip;
 		this.port = port;
+		
+		this.voltage= voltage;
+		this.electricity =electricity;
+		this.waterGage = waterGage;
+		this.waterLevel = waterLevel;
+		
+		
 		this.enable = true;
 	}
 
@@ -78,6 +90,38 @@ public class Station {
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
+	}
+
+	public double getVoltage() {
+		return voltage;
+	}
+
+	public void setVoltage(double voltage) {
+		this.voltage = voltage;
+	}
+
+	public double getElectricity() {
+		return electricity;
+	}
+
+	public void setElectricity(double electricity) {
+		this.electricity = electricity;
+	}
+
+	public double getWaterGage() {
+		return waterGage;
+	}
+
+	public void setWaterGage(double waterGage) {
+		this.waterGage = waterGage;
+	}
+
+	public double getWaterLevel() {
+		return waterLevel;
+	}
+
+	public void setWaterLevel(double waterLevel) {
+		this.waterLevel = waterLevel;
 	}
 
 }

@@ -54,8 +54,10 @@ public class MsgHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 			dao.save(dataFrame);// save to database
 
 			stationInfos.updateInfo(dataFrame.getStationId(),
-					dataFrame.getIp(), dataFrame.getPort());// update
-															// stationInfo
+					dataFrame.getIp(), dataFrame.getPort(),
+					dataFrame.getVoltage(), dataFrame.getElectricity(),
+					dataFrame.getWaterGage(), dataFrame.getWaterLevel());// update
+			// stationInfo
 
 			StringBuffer tmp = byteArrayToString(bytes);
 			logger.info(dataFrame + ", byte array:" + tmp);
