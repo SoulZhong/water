@@ -3,9 +3,11 @@
  */
 package com.itag.water.platform;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.itag.water.platform.domain.DataFrame;
 import com.itag.water.platform.domain.Station;
 
 /**
@@ -19,31 +21,25 @@ public class StationInfos {
 
 	private StationInfos() {
 
-		updateInfo(1, "1.1.1.1", 2020, 444, 222, 12312.01, 234.91);
-		updateInfo(2, "2.2.2.2", 2020, 333, 111, 111.1, 111.2);
-		updateInfo(3, "3.3.3.3", 2020, 333, 111, 111.1, 111.2);
-		updateInfo(4, "4.4.4.4", 2020, 333, 111, 111.1, 111.2);
-		updateInfo(5, "5.5.5.5", 2020, 333, 111, 111.1, 111.2);
+		DataFrame dataFrame = new DataFrame();
+		dataFrame.setTime(new Date());
+		updateInfo(1, dataFrame);
+		updateInfo(2, dataFrame);
+		updateInfo(3, dataFrame);
+		updateInfo(4, dataFrame);
+		updateInfo(5, dataFrame);
 	}
 
 	private Map<Integer, Station> stations = new ConcurrentHashMap<Integer, Station>();
 
-	public void updateInfo(int stationId, String ip, int port, double voltage,
-			double electricity, double waterGage, double waterLevel) {
+	public void updateInfo(int stationId, DataFrame dataFrame) {
 
 		Station station = stations.get(stationId);
 		if (station == null) {
-			station = new Station(stationId, ip, port, voltage, electricity,
-					waterGage, waterLevel);
+			station = new Station(stationId);
 			stations.put(stationId, station);
 		}
-
-		station.setIp(ip);
-		station.setPort(port);
-		station.setVoltage(voltage);
-		station.setElectricity(electricity);
-		station.setWaterGage(waterGage);
-		station.setWaterLevel(waterLevel);
+		station.setLastDataFrame(dataFrame);
 
 	}
 

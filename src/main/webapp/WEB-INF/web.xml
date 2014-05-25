@@ -18,6 +18,10 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>com.itag.water.platform.listener.ApplicationInitListener</listener-class>
+	</listener>
 
 <!-- 
 	<filter>
